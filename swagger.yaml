@@ -1,0 +1,823 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a sample product store server.  You can find out more about Swagger at \n[http://swagger.io](http://swagger.io) or on [irc.freenode.net](http://swagger.io/irc/).\n"
+  version: 1.0.0
+  title: Fashion Store
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: lee.raulin@smoothstack.com
+host: virtserver.swaggerhub.com
+basePath: /SmoothStack38/FashionStore/1.0.0
+tags:
+- name: products
+  description: Everything about FashionStore clothing products
+- name: orders
+  description: Access to FashionStore orders
+- name: users
+  description: Operations about users
+- name: coupons
+  description: Operations about coupons
+schemes:
+- https
+- http
+paths:
+  /products:
+    get:
+      tags:
+      - products
+      summary: Finds products in the store
+      description: Multiple status values can be provided with comma separated strings
+      operationId: readProducts
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: department
+        in: query
+        description: Department to filter by
+        required: false
+        type: string
+      - name: category
+        in: query
+        description: Category to filter by
+        required: false
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        "400":
+          description: Invalid status value
+    post:
+      tags:
+      - products
+      summary: Create a new product for the store
+      operationId: createProduct
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: products object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        "201":
+          description: Product created
+        "405":
+          description: Invalid input
+      security:
+      - Bearer: []
+  /products/{product_id}:
+    get:
+      tags:
+      - products
+      summary: Find a product by ID
+      description: Returns a single product
+      operationId: readProductById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: product_id
+        in: path
+        description: ID of products to return
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Product'
+        "404":
+          description: Product not found
+    put:
+      tags:
+      - products
+      summary: Update a product
+      operationId: updateProduct
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: product_id
+        in: path
+        description: ID of products that needs to be updated
+        required: true
+        type: integer
+        format: int64
+      - in: body
+        name: body
+        description: products object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        "200":
+          description: OK
+        "405":
+          description: Invalid input
+      security:
+      - Bearer: []
+    delete:
+      tags:
+      - products
+      summary: Delete a product
+      operationId: deleteProduct
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: product_id
+        in: path
+        description: product id to delete
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "204":
+          description: Successfully deleted
+        "404":
+          description: Product not found
+      security:
+      - Bearer: []
+  /orders:
+    get:
+      tags:
+      - orders
+      summary: Returns all orders available
+      description: Returns a list of all orders in the store
+      operationId: readOrders
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Order'
+        "400":
+          description: Invalid status value
+      security:
+      - Bearer: []
+    post:
+      tags:
+      - orders
+      summary: Create a new order for the store
+      operationId: createOrder
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: orders object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Order'
+      responses:
+        "201":
+          description: Order created
+        "405":
+          description: Invalid input
+      security:
+      - Bearer: []
+  /orders/{order_id}:
+    get:
+      tags:
+      - orders
+      summary: Find orders by ID
+      description: Returns a single coupon
+      operationId: readOrderById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: order_id
+        in: path
+        description: Order order_id to find
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Order'
+        "404":
+          description: Order not found
+      security:
+      - Bearer: []
+    put:
+      tags:
+      - orders
+      summary: Updates an order in the store
+      operationId: updateOrder
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: order_id
+        in: path
+        description: Order order_id to be updated
+        required: true
+        type: integer
+        format: int64
+      - in: body
+        name: body
+        description: Orders object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Order'
+      responses:
+        "200":
+          description: OK
+        "405":
+          description: Invalid input
+      security:
+      - Bearer: []
+    delete:
+      tags:
+      - orders
+      summary: Deletes an order
+      operationId: deleteOrder
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: order_id
+        in: path
+        description: Order order_id to delete
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "204":
+          description: Successfully deleted
+        "404":
+          description: Order not found
+      security:
+      - Bearer: []
+  /orders/reports:
+    get:
+      tags:
+      - orders
+      summary: Returns sales reports for store
+      description: Returns aggregated sales data for the store
+      operationId: readReports
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: object
+        "400":
+          description: Invalid status value
+      security:
+      - Bearer: []
+  /orders/taxes:
+    get:
+      tags:
+      - orders
+      summary: Returns taxes for store
+      description: Returns aggregated tax data for the store
+      operationId: readTaxes
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: number
+            format: float
+        "400":
+          description: Invalid status value
+      security:
+      - Bearer: []
+  /coupons:
+    get:
+      tags:
+      - coupons
+      summary: Returns all coupons available
+      description: Returns a list of all coupons in the store
+      operationId: readCoupons
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Coupon'
+        "400":
+          description: Invalid status value
+      security:
+      - Bearer: []
+    post:
+      tags:
+      - coupons
+      summary: Create a new coupon for the store
+      operationId: addCoupon
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: coupons object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Coupon'
+      responses:
+        "201":
+          description: Coupon created
+        "405":
+          description: Invalid input
+      security:
+      - Bearer: []
+  /coupons/{code}:
+    get:
+      tags:
+      - coupons
+      summary: Find coupons by ID
+      description: Returns a single coupon
+      operationId: readCouponByCode
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: code
+        in: path
+        description: Coupon code to find
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Coupon'
+        "404":
+          description: Coupon not found
+      security:
+      - Bearer: []
+    put:
+      tags:
+      - coupons
+      summary: Updates a coupon in the store with form data
+      operationId: updateCoupon
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: code
+        in: path
+        description: Coupon code to be updated
+        required: true
+        type: integer
+        format: int64
+      - in: body
+        name: body
+        description: Coupons object that needs to be added to the store
+        required: true
+        schema:
+          $ref: '#/definitions/Coupon'
+      responses:
+        "200":
+          description: OK
+        "405":
+          description: Invalid input
+      security:
+      - Bearer: []
+    delete:
+      tags:
+      - coupons
+      summary: Deletes a coupon
+      operationId: deleteCoupon
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: code
+        in: path
+        description: Coupon code to delete
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "204":
+          description: Successfully deleted
+        "404":
+          description: Coupon not found
+      security:
+      - Bearer: []
+  /users:
+    post:
+      tags:
+      - users
+      summary: Create users
+      description: Create a new user
+      operationId: createUser
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Created users object
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        "201":
+          description: User created
+        "405":
+          description: Invalid input
+  /users/login:
+    post:
+      tags:
+      - users
+      summary: Logs user into the system
+      operationId: loginUser
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Login request body
+        required: true
+        schema:
+          $ref: '#/definitions/Login'
+      responses:
+        "200":
+          description: successful operation
+          headers:
+            Authorization:
+              type: string
+              description: JWT Token
+        "400":
+          description: Invalid username/password supplied
+  /users/logout:
+    post:
+      tags:
+      - users
+      summary: Logs out current logged in users session
+      operationId: logoutUser
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful logout
+      security:
+      - Bearer: []
+  /users/{username}:
+    get:
+      tags:
+      - users
+      summary: Get user information by username
+      operationId: readUserByUsername
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: username
+        in: path
+        description: The name that needs to be fetched
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        "404":
+          description: User not found
+      security:
+      - Bearer: []
+    put:
+      tags:
+      - users
+      summary: Update users information
+      description: This can only be done by the logged in users.
+      operationId: updateUser
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: username
+        in: path
+        description: name that need to be updated
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: Updated users object
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        "200":
+          description: successful operation
+        "404":
+          description: User not found
+      security:
+      - Bearer: []
+    delete:
+      tags:
+      - users
+      summary: Delete users
+      description: This can only be done by the logged in users.
+      operationId: deleteUser
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: username
+        in: path
+        description: The name that needs to be deleted
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Successfully deleted
+        "404":
+          description: User not found
+      security:
+      - Bearer: []
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: JWT
+    in: header
+definitions:
+  Order:
+    type: object
+    required:
+    - id
+    - online
+    - product
+    - quantity
+    - status
+    properties:
+      id:
+        type: integer
+        format: int64
+      product:
+        $ref: '#/definitions/Product'
+      users:
+        $ref: '#/definitions/User'
+      coupon:
+        $ref: '#/definitions/Coupon'
+      quantity:
+        type: integer
+        format: int32
+      online:
+        type: boolean
+      order_date:
+        type: string
+        format: date-time
+      ship_date:
+        type: string
+        format: date-time
+      status:
+        type: string
+        description: Order Status
+        enum:
+        - placed
+        - approved
+        - delivered
+    xml:
+      name: Order
+  User:
+    type: object
+    required:
+    - address
+    - email
+    - first_name
+    - last_name
+    - password
+    - username
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      email:
+        type: string
+      phone:
+        type: string
+      address:
+        type: string
+    xml:
+      name: User
+  Login:
+    type: object
+    required:
+    - password
+    - username
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+    xml:
+      name: Login
+  Coupon:
+    type: object
+    required:
+    - code
+    - discount
+    - expiration_date
+    properties:
+      code:
+        type: string
+      discount:
+        type: number
+        format: float
+      expiration_date:
+        type: string
+        format: date
+    xml:
+      name: Coupon
+  Product:
+    type: object
+    required:
+    - category
+    - department
+    - discountable
+    - id
+    - name
+    - photo_url
+    - retail_price
+    - stock
+    - wholesale_price
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      department:
+        type: string
+        enum:
+        - mens
+        - womens
+        - kids
+      category:
+        type: string
+      photo_url:
+        type: string
+      wholesale_price:
+        type: number
+        format: float
+      retail_price:
+        type: number
+        format: float
+      stock:
+        type: integer
+        format: int32
+      discountable:
+        type: boolean
+    xml:
+      name: Product
+  ApiResponse:
+    type: object
+    properties:
+      Content-Type:
+        type: string
+      Status-Code:
+        type: integer
+      message:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties: {}
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
